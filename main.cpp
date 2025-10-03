@@ -44,6 +44,21 @@ int main() {
     leftPaddle.setPosition({leftPaddle.getPosition().x, 600 - leftPaddle.getSize().y});
   }
 
+  //right paddle inputs and bounds
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)) {
+    rightPaddle.move({0.f, -5.f});
+  } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) {
+    rightPaddle.move({0.f, 5.f});
+  }
+  if (rightPaddle.getPosition().y < 0) {
+    rightPaddle.setPosition({rightPaddle.getPosition().x, 0});
+  } else if (rightPaddle.getPosition().y + rightPaddle.getSize().y > 600) {
+    rightPaddle.setPosition({rightPaddle.getPosition().x, 600 - rightPaddle.getSize().y});
+  }
+
+  //right paddle inputs and bounds
+  
+
   //drawing stuff to the window
   window.clear(sf::Color::Black);
   window.draw(leftPaddle);
