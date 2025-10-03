@@ -21,6 +21,7 @@ int main() {
   sf::CircleShape ball(5.f);
   ball.setPosition({390.f, 295.f});
   ball.setFillColor(sf::Color::White);
+  sf::Vector2f ballVelocity{4.f, 4.f};
 
   while (window.isOpen()) { //gameloop
     while (auto eventOpt = window.pollEvent()) {
@@ -55,10 +56,15 @@ int main() {
   } else if (rightPaddle.getPosition().y + rightPaddle.getSize().y > 600) {
     rightPaddle.setPosition({rightPaddle.getPosition().x, 600 - rightPaddle.getSize().y});
   }
-
-  //right paddle inputs and bounds
   
+  //ball collisions
+  ball.move(ballVelocity);
+  ball.setOrigin({ball.getRadius(), ball.getRadius()});
+  if (ball.getPosition().y - ball.getRadius() <=0 || ball.getPosition().y + ball.getRadius() >=600) {
+    ballVelocity.y = -ballVelocity.y;
+  }
 
+  //bar and ball collisons
   //drawing stuff to the window
   window.clear(sf::Color::Black);
   window.draw(leftPaddle);
