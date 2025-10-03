@@ -30,6 +30,19 @@ int main() {
         window.close();
       }
     }
+   
+  //inputs
+  //left paddle inputs and bounds
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
+    leftPaddle.move({0.f, -5.f});
+  } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
+    leftPaddle.move({0.f, 5.f});
+  }
+  if (leftPaddle.getPosition().y < 0) {
+    leftPaddle.setPosition({leftPaddle.getPosition().x, 0});
+  } else if (leftPaddle.getPosition().y + leftPaddle.getSize().y > 600) {
+    leftPaddle.setPosition({leftPaddle.getPosition().x, 600 - leftPaddle.getSize().y});
+  }
 
   //drawing stuff to the window
   window.clear(sf::Color::Black);
