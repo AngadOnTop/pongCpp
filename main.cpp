@@ -1,6 +1,9 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <optional>
+#include <algorithm>
+
+bool isColliding(const sf::RectangleShape& rect, const sf::CircleShape& circle);
 
 int main() {
   //game window
@@ -22,6 +25,7 @@ int main() {
   ball.setPosition({390.f, 295.f});
   ball.setFillColor(sf::Color::White);
   sf::Vector2f ballVelocity{4.f, 4.f};
+  ball.setOrigin({ball.getRadius(), ball.getRadius()});
 
   while (window.isOpen()) { //gameloop
     while (auto eventOpt = window.pollEvent()) {
@@ -59,12 +63,23 @@ int main() {
   
   //ball collisions
   ball.move(ballVelocity);
-  ball.setOrigin({ball.getRadius(), ball.getRadius()});
   if (ball.getPosition().y - ball.getRadius() <=0 || ball.getPosition().y + ball.getRadius() >=600) {
     ballVelocity.y = -ballVelocity.y;
   }
 
   //bar and ball collisons
+  if (isColliding(leftPaddle, ball)) {
+    ballVelocity.x = std::abs(ballVelocity.x);
+  } 
+  if (isColliding(rightPaddle, ball)) {
+    ballVelocity.x = -std::abs(ballVelocity.x);
+  }
+
+  //reset ball
+  if (ball.getPosition().x < 0 || ball.getPosition().x > 800) {
+    ball.setPosition({390.f, 295.f});
+  }
+
   //drawing stuff to the window
   window.clear(sf::Color::Black);
   window.draw(leftPaddle);
@@ -74,3 +89,20 @@ int main() {
 
   }
 }
+
+
+bool isColliding(const sf::RectangleShape& rect, const sf::CircleShape& circle) {
+    auto rectBounds = rect.getGlobalBounds();   // sf::Rect<float>
+    auto circleCenter = circle.getPosition();
+    float radius = circle.getRadius();
+
+    // SFML 3: use position.x/y and size.x/y instead of left/top/width/height
+    float closestX = std::clamp(circleCenter.x, rectBounds.position.x, rectBounds.position.x + rectBounds.size.x);
+    float closestY = std::clamp(circleCenter.y, rectBounds.position.y, rectBounds.position.y + rectBounds.size.y);
+
+    float dx = circleCenter.x - closestX;
+    float dy = circleCenter.y - closestY;
+
+    return (dx*dx + dy*dy) < (radius * radius);
+}
+
