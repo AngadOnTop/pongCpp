@@ -6,6 +6,15 @@ int main() {
   //game window
   sf::RenderWindow window(sf::VideoMode({800, 600}), "Pong");
 
+  while (window.isOpen()) {
+    while (auto eventOpt = window.pollEvent()) {
+      sf::Event event = *eventOpt;
+
+      if (event.is<sf::Event::Closed>()) {
+        window.close();
+      }
+    }
+    
   //game objects
   //leftPaddle
   sf::RectangleShape leftPaddle({20, 100});
@@ -14,29 +23,16 @@ int main() {
 
   //rightPaddle
   sf::RectangleShape rightPaddle({20, 100});
-  rightPaddle.setPosition({780.f, 250.f});
+  rightPaddle.setPosition({100.f, 250.f});
   rightPaddle.setFillColor(sf::Color::White);
 
-  //ball
-  sf::CircleShape ball(5.f);
-  ball.setPosition({390.f, 295.f});
-  ball.setFillColor(sf::Color::White);
-
-  while (window.isOpen()) { //gameloop
-    while (auto eventOpt = window.pollEvent()) {
-      sf::Event event = *eventOpt;
-
-      if (event.is<sf::Event::Closed>()) {
-        window.close();
-      }
-    }
-
   //drawing stuff to the window
-  window.clear(sf::Color::Black);
+  window.clear(sf::Color:Black);
   window.draw(leftPaddle);
   window.draw(rightPaddle);
-  window.draw(ball);
   window.display();
 
+
   }
+  return 0;
 }
