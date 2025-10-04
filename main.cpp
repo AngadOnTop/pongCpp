@@ -20,10 +20,18 @@ int main() {
     rightPaddle.setFillColor(sf::Color::White);
 
     sf::CircleShape ball(5.f);
-    ball.setPosition({390.f, 295.f});
+    ball.setPosition({400.f, 295.f});
     ball.setFillColor(sf::Color::White);
     sf::Vector2f ballVelocity{4.f, 4.f};
     ball.setOrigin({ball.getRadius(), ball.getRadius()});
+
+    std::vector<sf::RectangleShape> centerline;
+    for (int i = 0; i < 600; i += 30) {
+      sf::RectangleShape dash({5.f, 20.f});
+      dash.setPosition({397.5f, (float)i});
+      dash.setFillColor(sf::Color::White);
+      centerline.push_back(dash);
+    }
 
     while (window.isOpen()) {
         while (auto eventOpt = window.pollEvent()) {
@@ -79,6 +87,7 @@ int main() {
         }
 
         window.clear(sf::Color::Black);
+        for (auto& dash : centerline) window.draw(dash);
         window.draw(leftPaddle);
         window.draw(rightPaddle);
         window.draw(ball);
