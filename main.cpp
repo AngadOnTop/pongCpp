@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include <optional>
 #include <algorithm>
@@ -8,6 +9,11 @@ bool isColliding(const sf::RectangleShape& rect, const sf::CircleShape& circle);
 int main() {
     sf::RenderWindow window(sf::VideoMode({800, 600}), "Pong");
     sf::Clock startClock;
+
+    sf::SoundBuffer buffer("./sound/hit.mp3");
+
+    sf::Sound sound(buffer);
+
     const float startDelay = 1.f;
     bool gameStarted = false;
     int leftPaddleScore = 0;
@@ -72,37 +78,39 @@ int main() {
         if (rightPaddle.getPosition().y < 0) {
             rightPaddle.setPosition({rightPaddle.getPosition().x, 0});
         } else if (rightPaddle.getPosition().y + rightPaddle.getSize().y > 600) {
-            rightPaddle.setPosition({rightPaddle.getPosition().x, 600 - rightPaddle.getSize().y});
+          rightPaddle.setPosition({rightPaddle.getPosition().x, 600 - rightPaddle.getSize().y});
         }
 
         float elapsed = startClock.getElapsedTime().asSeconds();
         if (elapsed >= startDelay) {
-            gameStarted = true;
+          gameStarted = true;
         }
 
         if (gameStarted) {
             ball.move(ballVelocity);
             if (ball.getPosition().y - ball.getRadius() <= 0 || ball.getPosition().y + ball.getRadius() >= 600) {
-                ballVelocity.y = -ballVelocity.y;
+              ballVelocity.y = -ballVelocity.y;
             }
             if (isColliding(leftPaddle, ball)) {
-                ballVelocity.x = std::abs(ballVelocity.x);
-                leftPaddleScore += 1;
-                leftText.setString(std::to_string(leftPaddleScore));
+              sound.play();
+              ballVelocity.x = std::abs(ballVelocity.x);
+              leftPaddleScore += 1;
+              leftText.setString(std::to_string(leftPaddleScore));
             }
             if (isColliding(rightPaddle, ball)) {
-                ballVelocity.x = -std::abs(ballVelocity.x);
-                rightPaddleScore += 1;
-                rightText.setString(std::to_string(rightPaddleScore));
+              sound.play();
+              ballVelocity.x = -std::abs(ballVelocity.x);
+              rightPaddleScore += 1;
+              rightText.setString(std::to_string(rightPaddleScore));
             }
             if (ball.getPosition().x < 0 || ball.getPosition().x > 800) {
-                ball.setPosition({400.f, 300.f});
-                leftPaddleScore = 0;
-                rightPaddleScore = 0;
-                leftText.setString(std::to_string(0));
-                rightText.setString(std::to_string(0));
-                startClock.restart();
-                gameStarted = false;
+              ball.setPosition({400.f, 300.f});
+              leftPaddleScore = 0;
+              rightPaddleScore = 0;
+              leftText.setString(std::to_string(0));
+              rightText.setString(std::to_string(0));
+              startClock.restart();
+              gameStarted = false;
             }
         }
 
