@@ -97,6 +97,10 @@ int main() {
             }
             if (ball.getPosition().x < 0 || ball.getPosition().x > 800) {
                 ball.setPosition({400.f, 300.f});
+                leftPaddleScore = 0;
+                rightPaddleScore = 0;
+                leftText.setString(std::to_string(0));
+                rightText.setString(std::to_string(0));
                 startClock.restart();
                 gameStarted = false;
             }
