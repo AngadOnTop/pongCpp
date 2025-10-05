@@ -10,6 +10,18 @@ int main() {
     sf::Clock startClock;
     const float startDelay = 1.f;
     bool gameStarted = false;
+    int leftPaddleScore = 0;
+    int rightPaddleScore = 0;
+
+
+    sf::Font font;
+    if (!font.openFromFile("./fonts/Minecraft.ttf")) {
+      std::cout << "Font did not load" << std::endl;
+    }
+    sf::Text leftText(font, std::to_string(leftPaddleScore), 48);
+    leftText.setPosition({176.f, 100.f});
+    sf::Text rightText(font, std::to_string(rightPaddleScore), 48);
+    rightText.setPosition({576.f, 100.f});
 
     sf::RectangleShape leftPaddle({20, 100});
     leftPaddle.setPosition({0.f, 250.f});
@@ -20,8 +32,8 @@ int main() {
     rightPaddle.setFillColor(sf::Color::White);
 
     sf::CircleShape ball(5.f);
-    ball.setPosition({400.f, 295.f});
-    ball.setFillColor(sf::Color::White);
+    ball.setPosition({400.f, 300.f});
+    ball.setFillColor(sf::Color::Blue);
     sf::Vector2f ballVelocity{4.f, 4.f};
     ball.setOrigin({ball.getRadius(), ball.getRadius()});
 
@@ -42,9 +54,9 @@ int main() {
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
-            leftPaddle.move({0.f, -5.f});
+            leftPaddle.move({0.f, -6.f});
         } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
-            leftPaddle.move({0.f, 5.f});
+            leftPaddle.move({0.f, 6.f});
         }
         if (leftPaddle.getPosition().y < 0) {
             leftPaddle.setPosition({leftPaddle.getPosition().x, 0});
@@ -53,9 +65,9 @@ int main() {
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)) {
-            rightPaddle.move({0.f, -5.f});
+            rightPaddle.move({0.f, -6.f});
         } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) {
-            rightPaddle.move({0.f, 5.f});
+            rightPaddle.move({0.f, 6.f});
         }
         if (rightPaddle.getPosition().y < 0) {
             rightPaddle.setPosition({rightPaddle.getPosition().x, 0});
@@ -75,12 +87,16 @@ int main() {
             }
             if (isColliding(leftPaddle, ball)) {
                 ballVelocity.x = std::abs(ballVelocity.x);
+                leftPaddleScore += 1;
+                leftText.setString(std::to_string(leftPaddleScore));
             }
             if (isColliding(rightPaddle, ball)) {
                 ballVelocity.x = -std::abs(ballVelocity.x);
+                rightPaddleScore += 1;
+                rightText.setString(std::to_string(rightPaddleScore));
             }
             if (ball.getPosition().x < 0 || ball.getPosition().x > 800) {
-                ball.setPosition({390.f, 295.f});
+                ball.setPosition({400.f, 300.f});
                 startClock.restart();
                 gameStarted = false;
             }
@@ -91,6 +107,8 @@ int main() {
         window.draw(leftPaddle);
         window.draw(rightPaddle);
         window.draw(ball);
+        window.draw(leftText);
+        window.draw(rightText);
         window.display();
     }
 }
