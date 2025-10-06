@@ -1,0 +1,7 @@
+[
+  {
+    "directory": "/Users/angaddhaliwal/Projects/pongCpp",
+    "command": "g++ -std=c++17 -I/opt/homebrew/include -c main.cpp -o main.o",
+    "file": "/Users/angaddhaliwal/Projects/pongCpp/main.cpp"
+  }
+]
